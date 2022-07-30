@@ -20,6 +20,8 @@ spec:
           value: '2'
         - name: serviceAccount.create
           value: 'false'
+        - name: image.tag
+          value: 'sha-305f694'
   project: default
   syncPolicy:
     automated:

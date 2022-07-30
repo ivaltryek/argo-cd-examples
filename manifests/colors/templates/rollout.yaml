@@ -14,6 +14,7 @@ spec:
     blueGreen:
       activeService: {{ include "colors.fullname" . }}
       previewService: {{ include "colors.fullname" . }}-preview
+      autoPromotionEnabled: false
   template:
     metadata:
       {{- with .Values.podAnnotations }}

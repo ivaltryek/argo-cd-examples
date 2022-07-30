@@ -17,7 +17,7 @@ spec:
         - values.yaml
       parameters:
         - name: replicaCount
-          value: '1'
+          value: '2'
         - name: serviceAccount.create
           value: 'false'
   project: default

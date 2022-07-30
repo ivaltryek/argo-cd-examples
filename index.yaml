@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  colors:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2022-07-30T11:26:05.578560564Z"
+    description: A Helm chart for Kubernetes
+    digest: b7850054177d13c39e72cd88c7b271e2a845542a046b8d6c0e2ed6fa7913d60e
+    name: colors
+    type: application
+    urls:
+    - https://meet86.github.io/argo-cd-examples/colors-1.1.0.tgz
+    version: 1.1.0
+generated: "2022-07-30T11:26:05.577999354Z"

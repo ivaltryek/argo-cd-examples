@@ -14,10 +14,11 @@ jobs:
 
     steps:
     # extract branch name on pull request
+
     - 
     name: Print branch name
-      if: github.event_name == 'pull_request'
-      run: echo "::set-env name=BRANCH_NAME::$(echo ${GITHUB_HEAD_REF})"
+    if: github.event_name == 'pull_request'
+    run: echo "::set-env name=BRANCH_NAME::$(echo ${GITHUB_HEAD_REF})"
     -
       name: Checkout
       uses: actions/checkout@v3

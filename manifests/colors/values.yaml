@@ -9,7 +9,7 @@ image:
   repository: ghcr.io/meet86/argo-cd-examples
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "sha-1eb7c9c"
+  tag: "fb8ef09abeec614f6df0c0a6adf32a6ae74edf53"
 imagePullSecrets: []
 nameOverride: ""
 namespace: ""

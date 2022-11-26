@@ -12,6 +12,7 @@ image:
   tag: "sha-1eb7c9c"
 imagePullSecrets: []
 nameOverride: ""
+namespace: ""
 fullnameOverride: ""
 serviceAccount:
   # Specifies whether a service account should be created

@@ -1,21 +1,16 @@
-{{- if .Values.rollout.enabled -}}
-apiVersion: argoproj.io/v1alpha1
-kind: Rollout
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: {{ include "colors.fullname" . }}
   labels:
     {{- include "colors.labels" . | nindent 4 }}
 spec:
+  {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
-  revisionHistoryLimit: 3
+  {{- end }}
   selector:
     matchLabels:
       {{- include "colors.selectorLabels" . | nindent 6 }}
-  strategy:
-    blueGreen:
-      activeService: {{ include "colors.fullname" . }}
-      previewService: {{ include "colors.fullname" . }}-preview
-      autoPromotionEnabled: false
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -25,6 +20,10 @@ spec:
       labels:
         {{- include "colors.selectorLabels" . | nindent 8 }}
     spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -33,4 +32,3 @@ spec:
             - name: http
               containerPort: {{ .Values.containerPort }}
               protocol: TCP
-{{- end }}

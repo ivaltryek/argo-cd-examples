@@ -1,0 +1,80 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "pull_request" ]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: pycolors
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    -
+      name: Checkout
+      uses: actions/checkout@v3
+
+    - 
+      name: Login to GitHub Container Registry
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    -
+      name: Docker meta
+      id: meta
+      uses: docker/metadata-action@v4
+      with:
+        images: ${{ env.REGISTRY }}/${{ github.actor }}/${{ env.IMAGE_NAME }}
+        tags: |
+          type=sha
+    -
+      name: build and push
+      uses: docker/build-push-action@v3
+      with:
+        push: true 
+        tags: ${{ steps.meta.outputs.tags }}
+    
+    -
+      name: fetch image tag and set it as env
+      run: |
+        echo "SHA_TAG=$(echo ${{ steps.meta.outputs.tags }} | grep -o '[^:][a-z]\+-[a-z0-9]\+')" >> $GITHUB_ENV
+    
+    - name: echo IMAGE_SHA_TAG
+      run: |
+        echo ${{ env.SHA_TAG }}
+    -
+      name: Checkout to Helm repo
+      uses: actions/checkout@v3
+      with:
+        repository: meet86/argo-cd-examples
+        ref: refs/heads/main
+
+    -
+      name: Bump image tag
+      uses: mikefarah/yq@master
+      with:
+        cmd: yq -i '.image.tag = "${{ env.SHA_TAG }}"' manifests/colors/values.yaml
+
+    - 
+      name: Commit the changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git commit -am "Bump image tag"
+    -
+      name: Create Pull Request
+      uses: peter-evans/create-pull-request@v4
+      with:
+        commit-message: Bump image tag
+        title: 'Update image sha: ${{ env.SHA_TAG }}'
+        body: Bump image tag
+        branch: github-actions
+        token: ${{ secrets.GITHUB_TOKEN }}

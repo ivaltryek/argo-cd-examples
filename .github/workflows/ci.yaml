@@ -40,7 +40,7 @@ jobs:
       uses: docker/metadata-action@v4
       with:
         images: ${{ env.REGISTRY }}/${{ github.actor }}/${{ env.IMAGE_NAME }}
-        tags: ${{ github.sha }}
+        tags: ${{ github.event.pull_request.head.sha }}
     -
       name: build and push
       uses: docker/build-push-action@v3
@@ -67,7 +67,7 @@ jobs:
       name: Bump image tag
       uses: mikefarah/yq@master
       with:
-        cmd: yq -i '.image.tag = "${{ github.sha }}"' manifests/colors/values.yaml
+        cmd: yq -i '.image.tag = "${{ github.event.pull_request.head.sha }}"' manifests/colors/values.yaml
 
     - 
       name: Commit the changes
@@ -80,7 +80,7 @@ jobs:
       uses: peter-evans/create-pull-request@v4
       with:
         commit-message: Bump image tag
-        title: 'Update image sha: ${{ env.SHA_TAG }}'
+        title: 'Update image sha: ${{ github.event.pull_request.head.sha }}'
         body: Bump image tag
         branch: github-actions
         token: ${{ secrets.GITHUB_TOKEN }}

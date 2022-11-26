@@ -31,8 +31,7 @@ jobs:
       uses: docker/metadata-action@v4
       with:
         images: ${{ env.REGISTRY }}/${{ github.actor }}/${{ env.IMAGE_NAME }}
-        tags: |
-          type=sha
+        tags: ${{ github.sha }}
     -
       name: build and push
       uses: docker/build-push-action@v3
@@ -40,14 +39,14 @@ jobs:
         push: true 
         tags: ${{ steps.meta.outputs.tags }}
     
-    -
-      name: fetch image tag and set it as env
-      run: |
-        echo "SHA_TAG=$(echo ${{ steps.meta.outputs.tags }} | grep -o '(sha-)[0-9a-z]+')" >> $GITHUB_ENV
+    # -
+    #   name: fetch image tag and set it as env
+    #   run: |
+    #     echo "SHA_TAG=$(echo ${{ steps.meta.outputs.tags }} | grep -o '(sha-)[0-9a-z]+')" >> $GITHUB_ENV
     
-    - name: echo IMAGE_SHA_TAG
-      run: |
-        echo ${{ env.SHA_TAG }}
+    # - name: echo IMAGE_SHA_TAG
+    #   run: |
+    #     echo ${{ env.SHA_TAG }}
     -
       name: Checkout to Helm repo
       uses: actions/checkout@v3
@@ -59,7 +58,7 @@ jobs:
       name: Bump image tag
       uses: mikefarah/yq@master
       with:
-        cmd: yq -i '.image.tag = "${{ env.SHA_TAG }}"' manifests/colors/values.yaml
+        cmd: yq -i '.image.tag = "${{ github.sha }}"' manifests/colors/values.yaml
 
     - 
       name: Commit the changes

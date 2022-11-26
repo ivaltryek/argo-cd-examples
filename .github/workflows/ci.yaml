@@ -19,7 +19,7 @@ jobs:
       name: Print branch name
       if: github.event_name == 'pull_request'
       run: |
-        echo "CUR_BRANCH_NAME=$(echo ${{ github.head_ref }})" >> $GITHUB_ENV
+        echo "CUR_BRANCH_NAME=$(echo '${{ github.head_ref }}' )" >> $GITHUB_ENV
         echo ${{ env.CUR_BRANCH_NAME }}
     -
       name: Checkout

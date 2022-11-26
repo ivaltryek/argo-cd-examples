@@ -1,0 +1,40 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: preview-environments
+  namespace: argocd
+spec:
+  generators:
+  - pullRequest:
+      github:
+        owner: meet86
+        repo: argo-cd-examples
+        labels:
+        - github-actions
+      requeueAfterSeconds: 30
+  template:      
+    metadata:
+      name: 'colors-deployment-{{branch}}-{{number}}'
+    spec:
+      source:
+        repoURL: https://github.com/meet86/argo-cd-examples.git
+        targetRevision: '{{head_sha}}'
+        path: manifests/colors
+        helm:
+          parameters:
+          - name: "image.tag"
+            value: '{{head_sha}}'
+          - name: "namespace"
+            value: 'colors-deployment-{{branch}}-{{number}}'
+          - name: "ingress.hosts[0].host"
+            value: 'colors-deployment-{{branch}}-{{number}}.example.com'
+      project: default
+      syncPolicy:
+        syncOptions:
+          - CreateNamespace=true  
+        automated:
+          prune: true
+          selfHeal: true
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: 'colors-deployment-{{branch}}-{{number}}'

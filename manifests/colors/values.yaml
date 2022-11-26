@@ -9,7 +9,7 @@ image:
   repository: ghcr.io/meet86/pycolors
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "sha-1eb7c9c"
+  tag: ""
 imagePullSecrets: []
 nameOverride: ""
 namespace: ""

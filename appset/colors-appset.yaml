@@ -9,8 +9,8 @@ spec:
       github:
         owner: meet86
         repo: argo-cd-examples
-        labels:
-        - github-actions
+        # labels:
+        # - github-actions
       requeueAfterSeconds: 30
   template:      
     metadata:

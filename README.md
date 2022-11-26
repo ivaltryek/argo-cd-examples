@@ -1,1 +1,1 @@
-# argo-cd-examples
+# python-colors

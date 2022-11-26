@@ -11,6 +11,9 @@ spec:
         repo: argo-cd-examples
         # labels:
         # - github-actions
+        tokenRef:
+          key: token
+          secretName: github-token 
       requeueAfterSeconds: 30
   template:      
     metadata:

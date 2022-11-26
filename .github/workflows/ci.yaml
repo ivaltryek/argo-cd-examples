@@ -43,7 +43,7 @@ jobs:
     -
       name: fetch image tag and set it as env
       run: |
-        echo "SHA_TAG=$(echo ${{ steps.meta.outputs.tags }} | grep -o '[^:][a-z]\+-[a-z0-9]\+')" >> $GITHUB_ENV
+        echo "SHA_TAG=$(echo ${{ steps.meta.outputs.tags }} | grep -o '(sha-)[0-9a-z]+')" >> $GITHUB_ENV
     
     - name: echo IMAGE_SHA_TAG
       run: |
